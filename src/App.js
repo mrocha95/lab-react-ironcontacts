@@ -6,6 +6,8 @@ import contactsJson from './contacts.json'
 function App() {
   const [contacts, setContacts] = React.useState(contactsJson.slice(0,5));
   const [remContacts, setRemContacts] = React.useState(contactsJson.slice(5,contactsJson.length-5));
+  const [nameAscending, setNameAscending] = React.useState(true);
+  const [popularityAscending, setPopularityAscending] = React.useState(true);
 
   const addContact = () => {
     let num = Math.floor(Math.random() * (remContacts.length))
@@ -22,16 +24,26 @@ function App() {
   const sortPop = () => {
     let contactsCopy = [...contacts]
     contactsCopy.sort(function(a,b) {
-      return b.popularity-a.popularity
+      if (popularityAscending){
+        return b.popularity-a.popularity
+      } else {
+        return a.popularity-b.popularity
+      }
     })
+    setPopularityAscending(!popularityAscending)
     setContacts(contactsCopy)
   }
 
   const sortName = () => {
     let contactsCopy = [...contacts]
     contactsCopy.sort(function(a,b) {
-      return a.name.localeCompare(b.name)
+      if (nameAscending){
+        return a.name.localeCompare(b.name)
+      } else {
+        return b.name.localeCompare(a.name)
+      }
     })
+    setNameAscending(!nameAscending)
     setContacts(contactsCopy)
   }
 
@@ -49,11 +61,12 @@ function App() {
   return (
     <div className="App">
     <h1><b>Iron Contacts</b></h1>
+    <h2>Currently viewing {contacts.length} celebrities</h2>
       <table>
       <tr>
         <button onClick={addContact}>Add Contact</button>
-        <button onClick={sortPop}>Sort by popularity</button>
-        <button onClick={sortName}>Sort by name</button>
+        <button onClick={sortPop}>Sort by popularity { popularityAscending? "(ascending)":"(descending)"}</button>
+        <button onClick={sortName}>Sort by name { nameAscending? "(ascending)":"(descending)"}</button>
       </tr>
       <tr>
         <th><b>Picture</b></th>
